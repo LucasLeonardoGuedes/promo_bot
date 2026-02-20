@@ -1,0 +1,56 @@
+
+Verificando Monitor
+ PROMOÇÃO DETECTADA (Monitor)
+Arquivo gerado: C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\poster\posts\oferta_2026-01-31_09-52-42.txt
+
+Verificando Mouse
+Preço normal
+
+Verificando Teclado
+ PROMOÇÃO DETECTADA (Teclado)
+Arquivo gerado: C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\poster\posts\oferta_2026-01-31_09-52-44.txt
+
+Verificando Monitor
+Preço normal
+
+Verificando Mouse
+Preço normal
+
+Verificando Teclado
+ PROMOÇÃO DETECTADA (Teclado)
+Arquivo gerado: C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\poster\posts\oferta_2026-01-31_09-53-02.txt
+
+Verificando Monitor
+ PROMOÇÃO DETECTADA (Monitor)
+Arquivo gerado: C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\poster\posts\oferta_2026-01-31_09-53-11.txt
+
+Verificando Mouse
+Preço normal
+
+Verificando Teclado
+ PROMOÇÃO DETECTADA (Teclado)
+Arquivo gerado: C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\poster\posts\oferta_2026-01-31_09-53-13.txt
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\scraper\ml_scraper.py", line 127, in <module>
+    print(f"{produto['nome']} \u2192 Preço normal")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucas\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 167: character maps to <undefined>
+
+Verificando Notebook Gamer 1
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\scraper\ml_scraper.py", line 127, in <module>
+    print(f"{produto['nome']} \u2192 Preço normal")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucas\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 167: character maps to <undefined>
+
+Verificando Notebook Gamer 1

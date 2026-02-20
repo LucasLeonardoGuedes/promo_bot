@@ -1,0 +1,72 @@
+baixo;fone bluetooth
+baixo;fone sem fio TWS
+baixo;fone on ear
+baixo;carregador turbo usb-c
+baixo;powerbank 20000mah
+baixo;cabo usb-c nylon
+baixo;mouse sem fio
+baixo;mouse gamer 16000 dpi
+baixo;teclado mecanico barato
+baixo;headset gamer 
+baixo;caixa de som bluetooth
+baixo;hub usb 3.0
+baixo;suporte monitor articulado (simples)
+baixo;ssd nvme 500gb
+baixo;ssd sata 480gb
+baixo;hd externo 1tb
+baixo;adaptador usb-c hdmi
+baixo;suporte para notebook resfriamento
+baixo;microfone usb para stream
+baixo;controle xbox series compatível pc
+baixo;controle ps5 
+baixo;mouse pad gamer grande
+baixo;suporte de monitor
+medio;monitor gamer 24 144hz
+medio;monitor gamer 24 180hz
+medio;monitor 27 180hz ips
+medio;monitor 27 240hz ips
+medio;monitor 32 180hz 
+medio;monitor 32 165hz ips
+medio;monitor 32 
+medio;monitor 27
+medio;monitor 27 2k qhd
+medio;ssd nvme 1tb
+medio;notebook i5 8gb 256ssd
+medio;notebook i5 16gb 512ssd
+medio;notebook i3 16gb 
+medio;notebook i7 16gb 
+medio;smart tv 43 4k
+medio;smart tv 50 4k
+medio;soundbar 2.1 bluetooth
+medio;caixa de som bluetooth jbl
+medio;smartphone xiaomi 5g (média)
+medio;samsung galaxy s20 5g (média)
+medio;samsung galaxy s20 fe 5g (média)
+medio;smartphone motorola g series
+medio;tablet 10 polegadas android
+medio;smartwatch intermediario
+medio;cadeira gamer (modelo médio)
+medio;aspirador robot (modelo básico)
+medio;moto g86 5g
+medio;moto g56
+medio;moto g76
+medio;galaxy tab s10
+alto;notebook gamer rtx (rtx3060/rtx4060)
+alto;tv 55 oled
+alto;tv 42 qled
+alto;tv 50 qled
+alto;smart tv 55 qled
+alto;tv 65 4k qled
+alto;playstation 5
+alto;tv toshiba 65
+alto:tv lg 55
+alto;iphone 14
+alto;iphone 15
+alto;iphone 16
+alto;iphone 17
+alto:samsung galaxy s23 5g 
+alto:samsung galaxy s24 5g 
+alto:samsung galaxy s23  
+alto:samsung galaxy s24 ultra 
+alto:samsung galaxy s25 ultra
+

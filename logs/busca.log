@@ -1,0 +1,257 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\scraper\busca_produtos.py", line 179, in <module>
+    driver_amz = iniciar_driver()
+                 ^^^^^^^^^^^^^^^^
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\scraper\selenium_busca.py", line 57, in iniciar_driver
+    driver = webdriver.Chrome(
+             ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=self.options)
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\common\webdriver.py", line 25, in __init__
+    super().__init__(*args, **kwargs)
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 257, in __init__
+    self.start_session(capabilities)
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 352, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 432, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#sessionnotcreatedexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x98f393
+	0x98f3d4
+	0x782090
+	0x7b756b
+	0x7b2750
+	0x7fae7f
+	0x7fa697
+	0x7eebb6
+	0x7c0319
+	0x7c10d4
+	0xbe4654
+	0xbdf959
+	0xbfc8f0
+	0x9a80a8
+	0x9afdfd
+	0x997bc8
+	0x997d92
+	0x98189a
+	0x75c7fcc9
+	0x77df82ae
+	0x77df827e
+
+
+🔎 Buscando: iphone 15
+🔎 ML (limite 8)
+Itens encontrados ML: 0
+🔎 Amazon (limite 7)
+⚠ Erro interno Amazon: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.76); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x98f393
+	0x98f3d4
+	0x782090
+	0x770fee
+	0x78fb03
+	0x7f56cc
+	0x80b4b9
+	0x7eebb6
+	0x7c0319
+	0x7c10d4
+	0xbe4654
+	0xbdf959
+	0xbfc8f0
+	0x9a80a8
+	0x9afdfd
+	0x997bc8
+	0x997d92
+	0x98189a
+	0x75c7fcc9
+	0x77df82ae
+	0x77df827e
+
+ML encontrados: 0
+Amazon encontrados: 0
+🔁 Nenhum produto novo para adicionar.
+⚠ Nenhum produto encontrado — delay maior
+⏳ Aguardando 70.0 segundos...
+
+🔎 Buscando: hub usb 3.0
+🔎 Amazon (limite 6)
+⚠ Erro interno Amazon: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x98f393
+	0x98f3d4
+	0x781ece
+	0x7bf5a7
+	0x7eecd6
+	0x7ea792
+	0x7e9da7
+	0x75526e
+	0x75580e
+	0x755ced
+	0xbe4654
+	0xbdf959
+	0xbfc8f0
+	0x9a80a8
+	0x9afdfd
+	0x754ec9
+	0x754510
+	0xd3092f
+	0x75c7fcc9
+	0x77df82ae
+	0x77df827e
+
+🔎 ML (limite 6)
+Erro mercadolivre: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.76); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x98f393
+	0x98f3d4
+	0x782090
+	0x770fee
+	0x78fb03
+	0x7f56cc
+	0x80b4b9
+	0x7eebb6
+	0x7c0319
+	0x7c10d4
+	0xbe4654
+	0xbdf959
+	0xbfc8f0
+	0x9a80a8
+	0x9afdfd
+	0x997bc8
+	0x997d92
+	0x98189a
+	0x75c7fcc9
+	0x77df82ae
+	0x77df827e
+
+⚠ Falha mercadolivre: 1
+ML encontrados: 0
+Amazon encontrados: 0
+🔁 Nenhum produto novo para adicionar.
+⚠ Nenhum produto encontrado — delay maior
+⏳ Aguardando 79.1 segundos...
+
+🔎 Buscando: tv toshiba 65
+🔎 ML (limite 7)
+Erro mercadolivre: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x98f393
+	0x98f3d4
+	0x781ece
+	0x7bf5a7
+	0x7eecd6
+	0x7ea792
+	0x7e9da7
+	0x75526e
+	0x75580e
+	0x755ced
+	0xbe4654
+	0xbdf959
+	0xbfc8f0
+	0x9a80a8
+	0x9afdfd
+	0x754ec9
+	0x754510
+	0xd3092f
+	0x75c7fcc9
+	0x77df82ae
+	0x77df827e
+
+⚠ Falha mercadolivre: 2
+🔎 Amazon (limite 5)
+⚠ Erro interno Amazon: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x98f393
+	0x98f3d4
+	0x781ece
+	0x7bf5a7
+	0x7eecd6
+	0x7ea792
+	0x7e9da7
+	0x75526e
+	0x75580e
+	0x755ced
+	0xbe4654
+	0xbdf959
+	0xbfc8f0
+	0x9a80a8
+	0x9afdfd
+	0x754ec9
+	0x754510
+	0xd3092f
+	0x75c7fcc9
+	0x77df82ae
+	0x77df827e
+
+ML encontrados: 0
+Amazon encontrados: 0
+🔁 Nenhum produto novo para adicionar.
+⚠ Nenhum produto encontrado — delay maior
+⏳ Aguardando 91.5 segundos...
+🚀 Ciclo finalizado.
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\scraper\busca_produtos.py", line 178, in <module>
+    driver_ml = iniciar_driver()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\scraper\selenium_busca.py", line 47, in iniciar_driver
+    driver = webdriver.Chrome(
+             ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\common\service.py", line 106, in start
+    self._start_process(self._path)
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\common\service.py", line 221, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucas\AppData\Local\Programs\Python\Python311\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\lucas\AppData\Local\Programs\Python\Python311\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 193] %1 não é um aplicativo Win32 válido
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\scraper\busca_produtos.py", line 178, in <module>
+    driver_ml = iniciar_driver()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\scraper\selenium_busca.py", line 47, in iniciar_driver
+    driver = webdriver.Chrome(
+             ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\common\service.py", line 106, in start
+    self._start_process(self._path)
+  File "C:\Users\lucas\OneDrive\Área de Trabalho\promo_bot\.venv311\Lib\site-packages\selenium\webdriver\common\service.py", line 221, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucas\AppData\Local\Programs\Python\Python311\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\lucas\AppData\Local\Programs\Python\Python311\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 193] %1 não é um aplicativo Win32 válido
