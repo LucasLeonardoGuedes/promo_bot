@@ -1,7 +1,7 @@
 from database.db import conectar
 
-LINK_CANONICO = "https://www.mercadolivre.com.br/monitor-gamer-lg-ultragear-24-24gs60f-b-ips-full-hd-180hz-1ms-gtg-nvidia-g-sync-amd-freesync-hdr10-srgb-99-hdmi-displayport/p/MLB38947984"
-PRECO_SIMULADO = 4100.00
+LINK_CANONICO = "https://www.amazon.com.br/TCL-QLED-SMART-65P8K-GOOGLE/dp/B0GH2L5MZL/ref=sr_1_9"
+PRECO_SIMULADO = 4700.00
 
 conn = conectar()
 cursor = conn.cursor()

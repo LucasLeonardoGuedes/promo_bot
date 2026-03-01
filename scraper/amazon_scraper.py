@@ -1,22 +1,27 @@
-from urllib import response
 import requests
 from bs4 import BeautifulSoup
 import time
 import random
 
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-from webdriver_manager import drivers
+
+# ==========================================================
+# AMAZON VIA REQUESTS (mais leve)
+# ==========================================================
 
 def coletar_produto_amazon(url):
     time.sleep(random.uniform(2.5, 4.5))
+
     headers = {
         "User-Agent": random.choice([
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
             "Mozilla/5.0 (X11; Linux x86_64)",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
         ]),
-        "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
-        "Accept-Encoding": "gzip, deflate, br"
+        "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
     }
 
     try:
@@ -28,9 +33,14 @@ def coletar_produto_amazon(url):
         print(f"Amazon: erro de conexão {e}")
         return None
 
+    # Detectar possível bloqueio
+    if "captcha" in response.text.lower():
+        print("Amazon: possível bloqueio detectado")
+        return None
+
     soup = BeautifulSoup(response.text, "lxml")
 
-    # 🔹 Nome
+    # Nome
     nome = soup.select_one("#productTitle")
     if not nome:
         print("Amazon: nome não encontrado (possível bloqueio)")
@@ -38,9 +48,8 @@ def coletar_produto_amazon(url):
 
     nome_produto = nome.text.strip()
 
-    # 🔹 Preço (Amazon tem vários formatos)
+    # Preço
     preco = None
-
     seletores_preco = [
         "span.a-price span.a-offscreen",
         "#priceblock_ourprice",
@@ -52,24 +61,17 @@ def coletar_produto_amazon(url):
         tag = soup.select_one(seletor)
         if tag:
             preco_texto = tag.text.strip()
-            preco = preco_texto.replace("R$", "").replace(".", "").replace(",", ".")
-            try:
-                preco = float(preco)
+            preco = _converter_preco(preco_texto)
+            if preco:
                 break
-            except:
-                preco = None
 
     if preco is None:
         print("Amazon: preço não encontrado")
         return None
 
-    
-
-    # 🔹 Imagem
+    # Imagem
     imagem = soup.select_one("#landingImage")
     imagem_url = imagem["src"] if imagem else None
-
-    
 
     return {
         "nome": nome_produto,
@@ -78,42 +80,76 @@ def coletar_produto_amazon(url):
         "imagem": imagem_url
     }
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
-import random
 
+# ==========================================================
+# AMAZON VIA SELENIUM (mais estável contra bloqueios)
+# ==========================================================
 
 def coletar_produto_amazon_selenium(url, driver):
     try:
         driver.get(url)
+
+        time.sleep(random.uniform(6, 10))
+        if "validateCaptcha" in driver.page_source:
+            print("🚨 Amazon bloqueou com captcha")
+            return None
+         
         time.sleep(random.uniform(3, 6))
 
-        # 🔥 Detectar bloqueio Amazon
-        if "clique aqui para continuar" in driver.page_source.lower():
+        page_lower = driver.page_source.lower()
+
+        # Detectar bloqueio
+        if "clique aqui para continuar" in page_lower or "captcha" in page_lower:
             print("⚠ Amazon solicitando validação humana")
-            time.sleep(60)
             return None
 
-        # pequeno scroll humano
+        # Scroll humano
         driver.execute_script("window.scrollBy(0, 400);")
         time.sleep(random.uniform(2, 4))
 
-        # espera o título carregar
-        WebDriverWait(driver, 15).until(
+        WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.ID, "productTitle"))
         )
 
         nome = driver.find_element(By.ID, "productTitle").text.strip()
 
         # -----------------------------------------
-        # PREÇO
+        # PREÇO (robusto com múltiplos seletores)
         # -----------------------------------------
-        try:
-            preco = driver.find_element(By.CLASS_NAME, "a-price-whole").text
-        except:
-            print("Amazon: preço não encontrado")
+        preco = None
+
+        seletores = [
+            "span.a-price span.a-offscreen",
+            "#priceblock_dealprice",
+            "#priceblock_saleprice",
+            "#priceblock_ourprice"
+        ]
+
+        for seletor in seletores:
+            try:
+                elemento = driver.find_element(By.CSS_SELECTOR, seletor)
+                preco = _converter_preco(elemento.text)
+                if preco:
+                    break
+            except:
+                continue
+
+        # fallback: inteiro + fração
+        if not preco:
+            try:
+                inteiro = driver.find_element(By.CLASS_NAME, "a-price-whole").text
+                fracao = driver.find_element(By.CLASS_NAME, "a-price-fraction").text
+                preco = float(
+                    inteiro.replace(".", "") + "." + fracao
+                )
+            except:
+                pass
+
+        if not preco:
+            print("Amazon Selenium: preço não encontrado")
+            print("------ DEBUG HTML AMAZON ------")
+            print(driver.page_source[:2000])
+            print("------ FIM DEBUG ------")
             return None
 
         # -----------------------------------------
@@ -125,33 +161,8 @@ def coletar_produto_amazon_selenium(url, driver):
             imagem = None
 
         # -----------------------------------------
-        # 🔒 FILTRO 1 — Disponibilidade
+        # DISPONIBILIDADE
         # -----------------------------------------
-        try:
-            driver.find_element(By.ID, "add-to-cart-button")
-        except:
-            print("Amazon: Produto indisponível")
-            return None
-
-        # -----------------------------------------
-        # 🔒 FILTRO 2 — Seller confiável (via Selenium)
-        # -----------------------------------------
-        seller_text = ""
-
-        try:
-            seller_element = driver.find_element(By.ID, "sellerProfileTriggerId")
-            seller_text = seller_element.text.strip()
-        except:
-            # fallback: vendido e entregue por Amazon
-            page_lower = driver.page_source.lower()
-            if "vendido e entregue por amazon.com.br" in page_lower:
-                seller_text = "Amazon Oficial"
-
-        if not seller_text:
-            print("Seller não identificado — produto pode ser marketplace")
-        # -----------------------------
-        # 🔒 VALIDAÇÃO REAL AMAZON
-        # -----------------------------
         try:
             driver.find_element(By.ID, "add-to-cart-button")
         except:
@@ -160,11 +171,28 @@ def coletar_produto_amazon_selenium(url, driver):
 
         return {
             "nome": nome,
-            "preco": float(preco.replace(".", "").replace(",", "")),
+            "preco": preco,
             "link": url,
             "imagem": imagem
         }
 
     except Exception as e:
         print(f"Amazon Selenium erro: {e}")
+        return None
+
+
+# ==========================================================
+# UTILIDADE INTERNA (CONVERSÃO DE PREÇO BR)
+# ==========================================================
+
+def _converter_preco(preco_texto):
+    """
+    Converte preço brasileiro:
+    'R$ 1.299,90' -> 1299.90
+    """
+    try:
+        preco_texto = preco_texto.replace("R$", "").strip()
+        preco_texto = preco_texto.replace(".", "").replace(",", ".")
+        return float(preco_texto)
+    except:
         return None

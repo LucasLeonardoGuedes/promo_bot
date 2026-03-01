@@ -6,17 +6,19 @@ import time
 import random
 
 
+# ==========================================================
+# MERCADO LIVRE - SELENIUM
+# ==========================================================
+
 def coletar_produto_ml_selenium(url, driver):
     try:
         driver.get(url)
-
         time.sleep(random.uniform(3, 5))
 
-        # pequeno scroll humano
+        # Scroll humano leve
         driver.execute_script("window.scrollBy(0, 500);")
         time.sleep(random.uniform(2, 4))
 
-        # espera título carregar
         WebDriverWait(driver, 15).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "h1.ui-pdp-title"))
         )
@@ -24,9 +26,26 @@ def coletar_produto_ml_selenium(url, driver):
         html = driver.page_source
         soup = BeautifulSoup(html, "lxml")
 
-        # -----------------------------
-        # 🔥 NOME
-        # -----------------------------
+        page_lower = html.lower()
+
+        # --------------------------------------------------
+        # 🔒 DETECÇÃO DE BLOQUEIO / PAUSA
+        # --------------------------------------------------
+        bloqueios = [
+            "produto pausado",
+            "publicação pausada",
+            "no momento não está disponível",
+            "captcha"
+        ]
+
+        for termo in bloqueios:
+            if termo in page_lower:
+                print(f"ML bloqueio detectado: {termo}")
+                return None
+
+        # --------------------------------------------------
+        # NOME
+        # --------------------------------------------------
         nome_elemento = soup.select_one("h1.ui-pdp-title")
         if not nome_elemento:
             print("ML: nome não encontrado")
@@ -34,57 +53,34 @@ def coletar_produto_ml_selenium(url, driver):
 
         nome = nome_elemento.text.strip()
 
-        # -----------------------------
-        # 🔥 PREÇO ATUAL (CORRETO)
-        # -----------------------------
-        preco_atual_elemento = soup.select_one(
-            "div.ui-pdp-price__second-line span.andes-money-amount__fraction"
-        )
+        # --------------------------------------------------
+        # PREÇO ATUAL
+        # --------------------------------------------------
+        preco_atual = _extrair_preco_ml(soup)
 
-        if not preco_atual_elemento:
+        if preco_atual is None:
             print("ML: preço atual não encontrado")
             return None
 
-        preco_atual = preco_atual_elemento.text.strip().replace(".", "")
+        # --------------------------------------------------
+        # PREÇO ANTIGO (opcional)
+        # --------------------------------------------------
+        preco_antigo = _extrair_preco_antigo_ml(soup)
 
-        # -----------------------------
-        # 🔥 PREÇO ANTIGO (SE EXISTIR)
-        # -----------------------------
-        preco_antigo = None
-        preco_antigo_elemento = soup.select_one(
-            "s.andes-money-amount span.andes-money-amount__fraction"
-        )
-
-        if preco_antigo_elemento:
-            preco_antigo = preco_antigo_elemento.text.strip().replace(".", "")
-
-        # -----------------------------
-        # 🔥 IMAGEM
-        # -----------------------------
+        # --------------------------------------------------
+        # IMAGEM
+        # --------------------------------------------------
         imagem_elemento = soup.select_one(
             "figure.ui-pdp-gallery__figure img"
         )
-        imagem = imagem_elemento["src"] if imagem_elemento else None
 
-        # -----------------------------
-        # 🔒 DISPONIBILIDADE
-        # -----------------------------
-        page_text = html.lower()
+        imagem = None
+        if imagem_elemento:
+            imagem = imagem_elemento.get("src")
 
-        if "produto pausado" in page_text:
-            print("Produto pausado")
-            return None
-
-        if "publicação pausada" in page_text:
-            print("Publicação pausada")
-            return None
-
-        if "no momento não está disponível" in page_text:
-            print("Produto indisponível")
-            return None
-        # -----------------------------
-        # 🔒 VALIDAÇÃO REAL DE COMPRA
-        # -----------------------------
+        # --------------------------------------------------
+        # VALIDAÇÃO DE COMPRA
+        # --------------------------------------------------
         try:
             driver.find_element(By.CSS_SELECTOR, "button.andes-button--loud")
         except:
@@ -93,8 +89,8 @@ def coletar_produto_ml_selenium(url, driver):
 
         return {
             "nome": nome,
-            "preco": float(preco_atual),
-            "preco_antigo": float(preco_antigo) if preco_antigo else None,
+            "preco": preco_atual,
+            "preco_antigo": preco_antigo,
             "link": url,
             "imagem": imagem
         }
@@ -103,3 +99,65 @@ def coletar_produto_ml_selenium(url, driver):
         print(f"ML Selenium erro: {e}")
         return None
 
+
+# ==========================================================
+# UTILIDADES INTERNAS
+# ==========================================================
+
+def _extrair_preco_ml(soup):
+    """
+    Extrai preço atual corretamente.
+    ML separa parte inteira e centavos.
+    """
+
+    inteiro = soup.select_one(
+        "div.ui-pdp-price__second-line span.andes-money-amount__fraction"
+    )
+
+    centavos = soup.select_one(
+        "div.ui-pdp-price__second-line span.andes-money-amount__cents"
+    )
+
+    if not inteiro:
+        return None
+
+    inteiro = inteiro.text.strip().replace(".", "")
+
+    if centavos:
+        preco_str = f"{inteiro}.{centavos.text.strip()}"
+    else:
+        preco_str = inteiro
+
+    try:
+        return float(preco_str)
+    except:
+        return None
+
+
+def _extrair_preco_antigo_ml(soup):
+    """
+    Extrai preço antigo (se houver).
+    """
+
+    inteiro = soup.select_one(
+        "s.andes-money-amount span.andes-money-amount__fraction"
+    )
+
+    centavos = soup.select_one(
+        "s.andes-money-amount span.andes-money-amount__cents"
+    )
+
+    if not inteiro:
+        return None
+
+    inteiro = inteiro.text.strip().replace(".", "")
+
+    if centavos:
+        preco_str = f"{inteiro}.{centavos.text.strip()}"
+    else:
+        preco_str = inteiro
+
+    try:
+        return float(preco_str)
+    except:
+        return None

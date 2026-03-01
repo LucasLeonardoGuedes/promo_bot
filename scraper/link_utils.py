@@ -1,24 +1,81 @@
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 
+
+# ==========================================================
+# MERCADO LIVRE
+# ==========================================================
 
 def limpar_link_mercadolivre(link: str) -> str:
-    if "/p/" in link:
-        return link.split("?")[0]
-    return link
+    """
+    Remove parâmetros de tracking do Mercado Livre.
+    Mantém apenas a URL base.
+    """
+    if not link:
+        return link
 
+    parsed = urlparse(link)
+
+    # remove querystring
+    clean = parsed._replace(query="")
+    return urlunparse(clean)
+
+
+# ==========================================================
+# AMAZON
+# ==========================================================
 
 def limpar_link_amazon(link: str) -> str:
-    if "/dp/" in link:
-        asin = link.split("/dp/")[1].split("/")[0]
-        return f"https://www.amazon.com.br/dp/{asin}"
-    return link
+    """
+    Extrai ASIN corretamente e gera link limpo:
+    https://www.amazon.com.br/dp/ASIN
+    """
+    if not link:
+        return link
 
+    parsed = urlparse(link)
+
+    # procura padrão /dp/ASIN
+    if "/dp/" in parsed.path:
+        try:
+            asin = parsed.path.split("/dp/")[1].split("/")[0]
+            return f"https://www.amazon.com.br/dp/{asin}"
+        except:
+            return link
+
+    # fallback: remove parâmetros
+    clean = parsed._replace(query="")
+    return urlunparse(clean)
+
+
+# ==========================================================
+# MAGALU
+# ==========================================================
 
 def limpar_link_magalu(link: str) -> str:
-    return link.split("?")[0]
+    """
+    Remove parâmetros da URL do Magalu.
+    """
+    if not link:
+        return link
 
+    parsed = urlparse(link)
+    clean = parsed._replace(query="")
+    return urlunparse(clean)
+
+
+# ==========================================================
+# FUNÇÃO CENTRAL
+# ==========================================================
 
 def limpar_link(link: str, marketplace: str) -> str:
+    """
+    Aplica limpeza conforme marketplace.
+    """
+    if not link or not isinstance(link, str):
+        return link
+
+    marketplace = marketplace.lower()
+
     if marketplace == "mercadolivre":
         return limpar_link_mercadolivre(link)
 

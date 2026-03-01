@@ -1,151 +1,135 @@
-from database.db import conectar
 from datetime import datetime, timedelta
 
 
-def verificar_promocao(produto, percentual_minimo=10):
-    conn = conectar()
-    cursor = conn.cursor()
+class PromoRules:
+    def __init__(self, conn):
+        self.conn = conn
+        self.cursor = conn.cursor()
 
-    produto_id = produto["id"]
+    # ==========================================================
+    # BUSCAR PREÇOS RECENTES (evita consultas gigantes)
+    # ==========================================================
+    def _buscar_precos_recentes(self, produto_id, limite=10):
+        self.cursor.execute("""
+            SELECT preco
+            FROM historico_precos
+            WHERE produto_id = ?
+            ORDER BY data_coleta DESC
+            LIMIT ?
+        """, (produto_id, limite))
 
-    cursor.execute("""
-        SELECT preco
-        FROM historico_precos
-        WHERE produto_id = ?
-        ORDER BY data_coleta DESC
-    """, (produto_id,))
+        return [row[0] for row in self.cursor.fetchall()]
 
-    precos = [row[0] for row in cursor.fetchall()]
-    conn.close()
+    # ==========================================================
+    # VERIFICAR SE HOUVE QUEDA DE PREÇO
+    # ==========================================================
+    def verificar_promocao(self, produto, percentual_minimo=10):
+        produto_id = produto["id"]
 
-    if len(precos) < 2:
-        return False
+        precos = self._buscar_precos_recentes(produto_id, limite=10)
 
-    preco_atual = precos[0]
+        if len(precos) < 2:
+            return False
 
-    preco_anterior = None
-    for p in precos[1:]:
-        if p != preco_atual:
-            preco_anterior = p
-            break
+        preco_atual = precos[0]
 
-    if not preco_anterior:
-        return False
+        preco_anterior = None
+        for p in precos[1:]:
+            if p != preco_atual:
+                preco_anterior = p
+                break
 
-    queda_percentual = ((preco_anterior - preco_atual) / preco_anterior) * 100
+        # proteção contra divisão por zero
+        if not preco_anterior or preco_anterior == 0:
+            return False
 
-    return queda_percentual >= percentual_minimo
+        queda_percentual = ((preco_anterior - preco_atual) / preco_anterior) * 100
 
+        return queda_percentual >= percentual_minimo
 
+    # ==========================================================
+    # OBTER PREÇO ANTERIOR DIFERENTE
+    # ==========================================================
+    def obter_preco_anterior(self, produto):
+        produto_id = produto["id"]
 
-def obter_preco_anterior(produto):
-    conn = conectar()
-    cursor = conn.cursor()
+        precos = self._buscar_precos_recentes(produto_id, limite=10)
 
-    produto_id = produto["id"]
+        if len(precos) < 2:
+            return None
 
-    cursor.execute("""
-        SELECT preco
-        FROM historico_precos
-        WHERE produto_id = ?
-        ORDER BY data_coleta DESC
-    """, (produto_id,))
+        preco_atual = precos[0]
 
-    precos = [row[0] for row in cursor.fetchall()]
-    conn.close()
+        for p in precos[1:]:
+            if p != preco_atual:
+                return p
 
-    if len(precos) < 2:
         return None
 
-    preco_atual = precos[0]
+    # ==========================================================
+    # VERIFICAR SE JÁ FOI POSTADA ESSA PROMOÇÃO
+    # ==========================================================
+    def promocao_ja_postada(self, produto, preco_atual):
+        produto_id = produto["id"]
 
-    for p in precos[1:]:
-        if p != preco_atual:
-            return p
+        self.cursor.execute("""
+            SELECT preco_atual
+            FROM metricas_promocoes
+            WHERE produto_id = ?
+            ORDER BY data_evento DESC
+            LIMIT 1
+        """, (produto_id,))
 
-    return None
+        row = self.cursor.fetchone()
 
-def promocao_ja_postada(produto, preco_atual):
-    conn = conectar()
-    cursor = conn.cursor()
+        if not row:
+            return False
 
-    cursor.execute("""
-        SELECT preco_atual
-        FROM metricas_promocoes
-        WHERE produto_nome = ?
-        ORDER BY data_evento DESC
-        LIMIT 1
-    """, (produto["nome"],))
+        ultimo_preco_postado = row[0]
+        return ultimo_preco_postado == preco_atual
 
-    row = cursor.fetchone()
-    conn.close()
+    # ==========================================================
+    # CONTROLAR REPOST (COOLDOWN)
+    # ==========================================================
+    def pode_repostar(self, produto, horas=6):
+        produto_id = produto["id"]
 
-    if not row:
-        return False  # nunca postou
+        self.cursor.execute("""
+            SELECT data_evento
+            FROM metricas_promocoes
+            WHERE produto_id = ?
+            ORDER BY data_evento DESC
+            LIMIT 1
+        """, (produto_id,))
 
-    ultimo_preco_postado = row[0]
+        row = self.cursor.fetchone()
 
-    # se o preço é IGUAL, não repostar
-    return ultimo_preco_postado == preco_atual
+        if not row:
+            return True
 
-def pode_repostar(produto, horas=6):
-    conn = conectar()
-    cursor = conn.cursor()
+        try:
+            ultima_data = datetime.fromisoformat(row[0])
+        except Exception:
+            return True
 
-    cursor.execute("""
-        SELECT data_evento
-        FROM metricas_promocoes
-        WHERE produto_nome = ?
-        ORDER BY data_evento DESC
-        LIMIT 1
-    """, (produto["nome"],))
+        return datetime.now() - ultima_data >= timedelta(hours=horas)
 
-    row = cursor.fetchone()
-    conn.close()
+    # ==========================================================
+    # VERIFICAR SE É MENOR PREÇO HISTÓRICO
+    # ==========================================================
+    def preco_historico(self, produto, minimo_registros=5):
+        produto_id = produto["id"]
 
-    if not row:
-        return True  # nunca postado
+        precos = self._buscar_precos_recentes(produto_id, limite=50)
 
-    ultima_data = datetime.fromisoformat(row[0])
-    return datetime.now() - ultima_data >= timedelta(hours=horas)
+        # precisa ter histórico suficiente (sem contar o atual)
+        if len(precos) - 1 < minimo_registros:
+            return False
 
-def preco_historico(produto, minimo_registros=5):
-    conn = conectar()
-    cursor = conn.cursor()
+        preco_atual = precos[0]
+        menor_preco_anterior = min(precos[1:])
 
-    # pega ID do produto
-    cursor.execute("""
-        SELECT id
-        FROM produtos
-        WHERE link = ?
-    """, (produto["link"],))
-
-    row = cursor.fetchone()
-    if not row:
-        conn.close()
-        return False
-
-    produto_id = row[0]
-
-    # pega TODOS os preços, exceto o mais recente
-    cursor.execute("""
-        SELECT preco
-        FROM historico_precos
-        WHERE produto_id = ?
-        ORDER BY data_coleta DESC
-    """, (produto_id,))
-
-    precos = [p[0] for p in cursor.fetchall()]
-    conn.close()
-
-    # precisa de histórico suficiente (SEM contar o atual)
-    if len(precos) - 1 < minimo_registros:
-        return False
-
-    preco_atual = precos[0]
-    menor_preco_anterior = min(precos[1:])
-
-    return preco_atual < menor_preco_anterior
+        return preco_atual < menor_preco_anterior
 
 
 

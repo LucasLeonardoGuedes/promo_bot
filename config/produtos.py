@@ -1,11 +1,9 @@
 import csv
 import random
 
-
 def carregar_produtos(limite_execucao=400):
     produtos = []
     vistos = set()
-
     try:
         with open(
             "config/produtos.csv",
@@ -30,24 +28,17 @@ def carregar_produtos(limite_execucao=400):
                     "categoria": categoria,
                     "url": url
                 })
-
     except FileNotFoundError:
         print("⚠ Arquivo produtos.csv não encontrado.")
         return []
-
     # 🔀 embaralha ordem (comportamento humano)
     random.shuffle(produtos)
-
     # 🔒 limita quantidade por execução
     produtos = produtos[:limite_execucao]
-
     print(f"🔎 {len(produtos)} produtos carregados para monitoramento.")
-
     return produtos
-
 def identificar_marketplace(url):
     url = url.lower()
-
     if "mercadolivre" in url:
         return "mercadolivre"
     elif "amazon" in url:

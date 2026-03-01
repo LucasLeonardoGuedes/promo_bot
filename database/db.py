@@ -28,16 +28,18 @@ def criar_tabelas():
     )
     """)
     cursor.execute("""
-CREATE TABLE IF NOT EXISTS metricas_promocoes (
+    CREATE TABLE IF NOT EXISTS metricas_promocoes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    produto_id INTEGER,
     produto_nome TEXT,
     categoria TEXT,
     preco_anterior REAL,
     preco_atual REAL,
     desconto REAL,
-    data_evento DATETIME DEFAULT CURRENT_TIMESTAMP
-)
-""")
+    data_evento DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
+    )
+    """)
 
 
     conn.commit()
@@ -48,3 +50,5 @@ CREATE TABLE IF NOT EXISTS metricas_promocoes (
 if __name__ == "__main__":
     criar_tabelas()
     print("Banco criado com sucesso")
+
+

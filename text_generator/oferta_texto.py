@@ -1,4 +1,6 @@
 def gerar_texto_oferta(produto, preco_anterior, preco_historico=False):
+
+    
     nome = produto["nome"]
     preco_atual = produto["preco"]
     link = produto["link"]
@@ -13,6 +15,7 @@ def gerar_texto_oferta(produto, preco_anterior, preco_historico=False):
 
     texto = f"""{selo}🔥 OFERTA NO RADAR
 
+
 🖱 {nome}
 
 💸 De R$ {preco_anterior:.2f}
@@ -26,6 +29,8 @@ def gerar_texto_oferta(produto, preco_anterior, preco_historico=False):
 
 ⏰ Monitorado pelo Radar Tech
 """
+    
+    
 
     return texto
 
