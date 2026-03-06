@@ -11,9 +11,7 @@ from scraper.selenium_busca import (
 )
 
 
-# ==========================================================
-# CLASSE DE CONTROLE DE BUSCA
-# ==========================================================
+
 
 class BuscaProdutos:
 
@@ -32,9 +30,7 @@ class BuscaProdutos:
         self.lista_busca_path = self.base_dir / "config" / "lista_busca.txt"
         self.csv_path = self.base_dir / "config" / "produtos.csv"
 
-    # -------------------------------------------------
-    # VERIFICA SE PODE EXECUTAR MARKETPLACE
-    # -------------------------------------------------
+    
     def pode_executar(self, marketplace):
         agora = datetime.now()
 
@@ -53,9 +49,7 @@ class BuscaProdutos:
         )
         return False
 
-    # -------------------------------------------------
-    # REGISTRA FALHA
-    # -------------------------------------------------
+    
     def registrar_falha(self, marketplace):
         self.falhas_marketplace[marketplace] += 1
 
@@ -67,9 +61,7 @@ class BuscaProdutos:
             )
             print(f"🚨 {marketplace} entrou em cooldown por 30 minutos")
 
-    # -------------------------------------------------
-    # CARREGAR LISTA DE BUSCA
-    # -------------------------------------------------
+    
     def carregar_lista_busca(self):
         grupos = {
             "baixo": [],
@@ -100,14 +92,12 @@ class BuscaProdutos:
 
         return grupos
 
-    # -------------------------------------------------
-    # SALVAR NO CSV (ANTI-DUPLICAÇÃO + LIMITE)
-    # -------------------------------------------------
+    
     def salvar_no_csv(self, nome_base, links, limite_total=800):
 
         existentes = set()
 
-        # cria arquivo se não existir
+        
         if not self.csv_path.exists():
             with open(self.csv_path, "w", newline="", encoding="utf-8") as f:
                 writer = csv.writer(f)
@@ -149,7 +139,7 @@ class BuscaProdutos:
     # -------------------------------------------------
     def executar(self):
 
-        # 🔒 Controle de horário
+        
         hora = datetime.now().hour
         if hora < 7 or hora > 23:
             print("⛔ Fora do horário operacional (07h–23h)")
@@ -259,9 +249,7 @@ class BuscaProdutos:
                 driver_amz.quit()
 
 
-# ==========================================================
-# ENTRYPOINT
-# ==========================================================
+
 
 if __name__ == "__main__":
     busca = BuscaProdutos()

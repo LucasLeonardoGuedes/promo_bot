@@ -8,9 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-# ==========================================================
-# AMAZON VIA REQUESTS (mais leve)
-# ==========================================================
+
 
 def coletar_produto_amazon(url):
     time.sleep(random.uniform(2.5, 4.5))
@@ -80,11 +78,6 @@ def coletar_produto_amazon(url):
         "imagem": imagem_url
     }
 
-
-# ==========================================================
-# AMAZON VIA SELENIUM (mais estável contra bloqueios)
-# ==========================================================
-
 def coletar_produto_amazon_selenium(url, driver):
     try:
         driver.get(url)
@@ -103,7 +96,7 @@ def coletar_produto_amazon_selenium(url, driver):
             print("⚠ Amazon solicitando validação humana")
             return None
 
-        # Scroll humano
+        # Scroll 
         driver.execute_script("window.scrollBy(0, 400);")
         time.sleep(random.uniform(2, 4))
 
@@ -113,9 +106,7 @@ def coletar_produto_amazon_selenium(url, driver):
 
         nome = driver.find_element(By.ID, "productTitle").text.strip()
 
-        # -----------------------------------------
-        # PREÇO (robusto com múltiplos seletores)
-        # -----------------------------------------
+        
         preco = None
 
         seletores = [
@@ -134,7 +125,7 @@ def coletar_produto_amazon_selenium(url, driver):
             except:
                 continue
 
-        # fallback: inteiro + fração
+        
         if not preco:
             try:
                 inteiro = driver.find_element(By.CLASS_NAME, "a-price-whole").text
@@ -152,17 +143,13 @@ def coletar_produto_amazon_selenium(url, driver):
             print("------ FIM DEBUG ------")
             return None
 
-        # -----------------------------------------
-        # IMAGEM
-        # -----------------------------------------
+       
         try:
             imagem = driver.find_element(By.ID, "landingImage").get_attribute("src")
         except:
             imagem = None
 
-        # -----------------------------------------
-        # DISPONIBILIDADE
-        # -----------------------------------------
+        
         try:
             driver.find_element(By.ID, "add-to-cart-button")
         except:
@@ -181,9 +168,6 @@ def coletar_produto_amazon_selenium(url, driver):
         return None
 
 
-# ==========================================================
-# UTILIDADE INTERNA (CONVERSÃO DE PREÇO BR)
-# ==========================================================
 
 def _converter_preco(preco_texto):
     """

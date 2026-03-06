@@ -1,5 +1,6 @@
 import random
 import time
+import os
 import requests
 from bs4 import BeautifulSoup
 
@@ -38,8 +39,18 @@ if __name__ == "__main__":
     driver_amazon = iniciar_driver()
     driver_ml = iniciar_driver()
 
-    driver_whatsapp = iniciar_driver_whatsapp()
-    preparar_whatsapp_canal(driver_whatsapp, "Radar Tech")
+    whatsapp_provider = os.getenv("WHATSAPP_PROVIDER", "disabled").strip().lower()
+    driver_whatsapp = None
+
+    if whatsapp_provider == "selenium":
+        try:
+            driver_whatsapp = iniciar_driver_whatsapp()
+            preparar_whatsapp_canal(driver_whatsapp, "Radar Tech")
+        except Exception as e:
+            print(f"⚠ Falha ao iniciar WhatsApp Selenium: {e}")
+            driver_whatsapp = None
+    else:
+        print(f"WhatsApp provider '{whatsapp_provider}' desativado no V1")
 
     sucessos_total = 0
     contador_produtos = 0
@@ -77,9 +88,7 @@ if __name__ == "__main__":
             print("⚠ Preço atual inválido — ignorando")
             continue
 
-        # -----------------------------
-        # SALVAR PRODUTO
-        # -----------------------------
+        
         try:
             cursor = conn.cursor()
 
@@ -120,21 +129,19 @@ if __name__ == "__main__":
         produto_regra = produto.copy()
         produto_regra["link"] = link_original
 
-        # -----------------------------
-        # REGRAS DE PROMOÇÃO
-        # -----------------------------
+        
         preco_anterior = rules.obter_preco_anterior(produto_regra)
 
         if not preco_anterior:
             print("Sem histórico suficiente")
             continue
 
-        # 🔒 PROTEÇÃO 2 — histórico absurdo
+        
         if preco_anterior <= 0 or preco_anterior > 50000:
             print("⚠ Histórico inválido — ignorando")
             continue
 
-        # 🔒 PROTEÇÃO 3 — preço maior que anterior (não é promoção)
+        
         if produto["preco"] >= preco_anterior:
             print("Preço maior ou igual ao anterior — ignorando")
             continue
@@ -157,7 +164,7 @@ if __name__ == "__main__":
 
         desconto = (preco_anterior - produto["preco"]) / preco_anterior
 
-        # 🔒 PROTEÇÃO 4 — desconto absurdo
+        
         if desconto > 0.80:
             print("Desconto suspeito (>80%)")
             continue
@@ -198,19 +205,28 @@ if __name__ == "__main__":
         # -----------------------------
         sucesso_whatsapp = False
 
-        if produto.get("imagem"):
-            try:
-                enviar_imagem_canal(driver_whatsapp, texto, produto["imagem"])
-                sucesso_whatsapp = True
-            except Exception as e:
-                print("Erro ao enviar imagem WhatsApp:", e)
-        else:
-            sucesso_whatsapp = enviar_mensagem_canal(driver_whatsapp, texto)
+        if driver_whatsapp is not None and whatsapp_provider != "disabled":
+            if produto.get("imagem"):
+                try:
+                    sucesso_whatsapp = enviar_imagem_canal(
+                        driver_whatsapp,
+                        texto,
+                        produto["imagem"]
+                    )
+                except Exception as e:
+                    print("Erro ao enviar imagem WhatsApp:", e)
+            else:
+                try:
+                    sucesso_whatsapp = enviar_mensagem_canal(driver_whatsapp, texto)
+                except Exception as e:
+                    print("Erro ao enviar mensagem WhatsApp:", e)
 
-        if not sucesso_whatsapp:
-            print("⚠ Tentando re-preparar canal...")
-            preparar_whatsapp_canal(driver_whatsapp, "Radar Tech")
-            enviar_mensagem_canal(driver_whatsapp, texto)
+            if not sucesso_whatsapp:
+                print("⚠ Tentando re-preparar canal...")
+                preparar_whatsapp_canal(driver_whatsapp, "Radar Tech")
+                enviar_mensagem_canal(driver_whatsapp, texto)
+        else:
+            print("WhatsApp desativado para este ciclo")
 
         time.sleep(random.uniform(6, 12))
 
@@ -218,7 +234,8 @@ if __name__ == "__main__":
 
     driver_amazon.quit()
     driver_ml.quit()
-    driver_whatsapp.quit()
+    if driver_whatsapp:
+        driver_whatsapp.quit()
     conn.close()
 
     print("\n✅ Ciclo finalizado com estabilidade.")

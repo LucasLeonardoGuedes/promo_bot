@@ -1,9 +1,7 @@
 from urllib.parse import urlparse, urlunparse
 
 
-# ==========================================================
-# MERCADO LIVRE
-# ==========================================================
+
 
 def limpar_link_mercadolivre(link: str) -> str:
     """
@@ -15,14 +13,12 @@ def limpar_link_mercadolivre(link: str) -> str:
 
     parsed = urlparse(link)
 
-    # remove querystring
+   
     clean = parsed._replace(query="")
     return urlunparse(clean)
 
 
-# ==========================================================
-# AMAZON
-# ==========================================================
+
 
 def limpar_link_amazon(link: str) -> str:
     """
@@ -47,9 +43,7 @@ def limpar_link_amazon(link: str) -> str:
     return urlunparse(clean)
 
 
-# ==========================================================
-# MAGALU
-# ==========================================================
+
 
 def limpar_link_magalu(link: str) -> str:
     """
@@ -63,9 +57,7 @@ def limpar_link_magalu(link: str) -> str:
     return urlunparse(clean)
 
 
-# ==========================================================
-# FUNÇÃO CENTRAL
-# ==========================================================
+
 
 def limpar_link(link: str, marketplace: str) -> str:
     """

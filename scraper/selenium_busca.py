@@ -11,9 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 
-# ==========================================================
-# DELAY HUMANO REALISTA
-# ==========================================================
+
 
 def delay_humano(minimo=1.2, maximo=3.8):
     """
@@ -24,9 +22,7 @@ def delay_humano(minimo=1.2, maximo=3.8):
     time.sleep(base + micro_pausa)
 
 
-# ==========================================================
-# SIMULA MOVIMENTO DE MOUSE
-# ==========================================================
+
 
 def movimento_mouse_humano(driver):
     try:
@@ -49,9 +45,7 @@ def movimento_mouse_humano(driver):
         pass
 
 
-# ==========================================================
-# SCROLL HUMANO MELHORADO
-# ==========================================================
+
 
 def scroll_humano(driver):
     altura_total = driver.execute_script("return document.body.scrollHeight")
@@ -62,12 +56,6 @@ def scroll_humano(driver):
             f"window.scrollTo(0, {altura_total * i / passos});"
         )
         time.sleep(random.uniform(0.8, 2.3))
-
-
-# ==========================================================
-# DRIVER STEALTH MELHORADO
-# ==========================================================
-
 
 
 
@@ -102,7 +90,7 @@ def iniciar_driver_whatsapp():
 
     options = Options()
 
-    # Perfil exclusivo WhatsApp
+    
     
     options.add_argument("--start-maximized")
     options.add_argument("--disable-blink-features=AutomationControlled")
@@ -114,9 +102,7 @@ def iniciar_driver_whatsapp():
     return driver
 
 
-# ==========================================================
-# BUSCAR AMAZON (STEALTH)
-# ==========================================================
+
 
 def buscar_amazon_selenium(driver, termo, limite=10):
 
@@ -167,9 +153,7 @@ def buscar_amazon_selenium(driver, termo, limite=10):
     return links
 
 
-# ==========================================================
-# BUSCAR MERCADO LIVRE (STEALTH)
-# ==========================================================
+
 
 def buscar_mercadolivre_selenium(driver, termo, limite=10):
 

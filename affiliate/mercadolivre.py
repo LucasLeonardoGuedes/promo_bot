@@ -1,12 +1,12 @@
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
-TRACKING_ID = "8c17cb98-d081-4d2c-a41a-99de065a7177"  # o seu
+TRACKING_ID = "8c17cb98-d081-4d2c-a41a-99de065a7177"  
 
 def gerar_link_afiliado(url_produto):
     parsed = urlparse(url_produto)
     query = parse_qs(parsed.query)
 
-    # adiciona tracking_id
+    
     query["tracking_id"] = [TRACKING_ID]
 
     nova_query = urlencode(query, doseq=True)

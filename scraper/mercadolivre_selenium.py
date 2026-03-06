@@ -6,9 +6,7 @@ import time
 import random
 
 
-# ==========================================================
-# MERCADO LIVRE - SELENIUM
-# ==========================================================
+
 
 def coletar_produto_ml_selenium(url, driver):
     try:
@@ -28,9 +26,7 @@ def coletar_produto_ml_selenium(url, driver):
 
         page_lower = html.lower()
 
-        # --------------------------------------------------
-        # 🔒 DETECÇÃO DE BLOQUEIO / PAUSA
-        # --------------------------------------------------
+       
         bloqueios = [
             "produto pausado",
             "publicação pausada",
@@ -43,9 +39,7 @@ def coletar_produto_ml_selenium(url, driver):
                 print(f"ML bloqueio detectado: {termo}")
                 return None
 
-        # --------------------------------------------------
-        # NOME
-        # --------------------------------------------------
+       
         nome_elemento = soup.select_one("h1.ui-pdp-title")
         if not nome_elemento:
             print("ML: nome não encontrado")
@@ -53,23 +47,17 @@ def coletar_produto_ml_selenium(url, driver):
 
         nome = nome_elemento.text.strip()
 
-        # --------------------------------------------------
-        # PREÇO ATUAL
-        # --------------------------------------------------
+       
         preco_atual = _extrair_preco_ml(soup)
 
         if preco_atual is None:
             print("ML: preço atual não encontrado")
             return None
 
-        # --------------------------------------------------
-        # PREÇO ANTIGO (opcional)
-        # --------------------------------------------------
+        
         preco_antigo = _extrair_preco_antigo_ml(soup)
 
-        # --------------------------------------------------
-        # IMAGEM
-        # --------------------------------------------------
+        
         imagem_elemento = soup.select_one(
             "figure.ui-pdp-gallery__figure img"
         )
@@ -78,9 +66,7 @@ def coletar_produto_ml_selenium(url, driver):
         if imagem_elemento:
             imagem = imagem_elemento.get("src")
 
-        # --------------------------------------------------
-        # VALIDAÇÃO DE COMPRA
-        # --------------------------------------------------
+        
         try:
             driver.find_element(By.CSS_SELECTOR, "button.andes-button--loud")
         except:
@@ -100,9 +86,7 @@ def coletar_produto_ml_selenium(url, driver):
         return None
 
 
-# ==========================================================
-# UTILIDADES INTERNAS
-# ==========================================================
+
 
 def _extrair_preco_ml(soup):
     """

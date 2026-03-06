@@ -6,9 +6,7 @@ from config.telegram import TELEGRAM_TOKEN, TELEGRAM_CHAT_ID
 BASE_URL = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}"
 
 
-# --------------------------------------------------
-# ENVIO DE TEXTO
-# --------------------------------------------------
+
 def enviar_telegram(texto):
     url = f"{BASE_URL}/sendMessage"
 
@@ -29,9 +27,7 @@ def enviar_telegram(texto):
         print(f"🚨 Falha ao enviar texto Telegram: {e}")
 
 
-# --------------------------------------------------
-# ENVIO FOTO + TEXTO (COM LEGENDA)
-# --------------------------------------------------
+
 def enviar_telegram_foto_com_texto(texto, imagem_url):
     url = f"{BASE_URL}/sendPhoto"
 

@@ -6,9 +6,7 @@ class PromoRules:
         self.conn = conn
         self.cursor = conn.cursor()
 
-    # ==========================================================
-    # BUSCAR PREÇOS RECENTES (evita consultas gigantes)
-    # ==========================================================
+    
     def _buscar_precos_recentes(self, produto_id, limite=10):
         self.cursor.execute("""
             SELECT preco
@@ -20,9 +18,7 @@ class PromoRules:
 
         return [row[0] for row in self.cursor.fetchall()]
 
-    # ==========================================================
-    # VERIFICAR SE HOUVE QUEDA DE PREÇO
-    # ==========================================================
+  
     def verificar_promocao(self, produto, percentual_minimo=10):
         produto_id = produto["id"]
 
@@ -39,7 +35,7 @@ class PromoRules:
                 preco_anterior = p
                 break
 
-        # proteção contra divisão por zero
+        
         if not preco_anterior or preco_anterior == 0:
             return False
 
@@ -47,9 +43,7 @@ class PromoRules:
 
         return queda_percentual >= percentual_minimo
 
-    # ==========================================================
-    # OBTER PREÇO ANTERIOR DIFERENTE
-    # ==========================================================
+   
     def obter_preco_anterior(self, produto):
         produto_id = produto["id"]
 
@@ -66,9 +60,7 @@ class PromoRules:
 
         return None
 
-    # ==========================================================
-    # VERIFICAR SE JÁ FOI POSTADA ESSA PROMOÇÃO
-    # ==========================================================
+    
     def promocao_ja_postada(self, produto, preco_atual):
         produto_id = produto["id"]
 
@@ -88,9 +80,7 @@ class PromoRules:
         ultimo_preco_postado = row[0]
         return ultimo_preco_postado == preco_atual
 
-    # ==========================================================
-    # CONTROLAR REPOST (COOLDOWN)
-    # ==========================================================
+   
     def pode_repostar(self, produto, horas=6):
         produto_id = produto["id"]
 
@@ -114,15 +104,13 @@ class PromoRules:
 
         return datetime.now() - ultima_data >= timedelta(hours=horas)
 
-    # ==========================================================
-    # VERIFICAR SE É MENOR PREÇO HISTÓRICO
-    # ==========================================================
+
     def preco_historico(self, produto, minimo_registros=5):
         produto_id = produto["id"]
 
         precos = self._buscar_precos_recentes(produto_id, limite=50)
 
-        # precisa ter histórico suficiente (sem contar o atual)
+       
         if len(precos) - 1 < minimo_registros:
             return False
 

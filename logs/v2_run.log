@@ -1,0 +1,20 @@
+2026-03-01 13:28:08,546 INFO v2.run - WHATSAPP_PROVIDER=disabled
+2026-03-01 13:28:08,546 INFO v2.run - WhatsApp ainda não integrado no V2 skeleton.
+2026-03-01 13:28:08,549 INFO v2.run - inicio ciclo=1 total_produtos=3
+2026-03-01 13:28:09,310 INFO v2.run - validacao marketplace=mercadolivre status=INVALID motivo=texto de indisponibilidade detectado: sem estoque promo_status=SKIP drop_pct=None url=https://www.mercadolivre.com.br/monitor-lg-ultragear-24g411a-b-24fhd-144hz-1ms-mbr-nvidia-g-sync-amd-freesync-hdr10/p/MLB57489948
+2026-03-01 13:28:10,025 INFO v2.run - validacao marketplace=amazon status=INVALID motivo=produto indisponivel promo_status=SKIP drop_pct=None url=https://www.amazon.com.br/Smartphone-Motorola-Moto-Buds-Ultrarresistencia/dp/B0DK7T65TR
+2026-03-01 13:28:11,627 INFO v2.run - validacao marketplace=amazon status=INVALID motivo=produto indisponivel promo_status=SKIP drop_pct=None url=https://www.amazon.com.br/Apple-iPhone-Pro-Max-256/dp/B0FQJ2KJ9X/ref=sr_1_13
+2026-03-01 13:28:11,627 INFO v2.run - fim ciclo=1 processados=3 validos=0 invalidos=3
+2026-03-01 13:28:11,627 INFO v2.run - price_checks gravados: 3
+2026-03-01 13:28:11,627 INFO v2.run - resumo ciclo=1 total_checks=3 suspect=0 promo_disparadas=0 tempo_total=3.08s
+2026-03-01 13:28:11,627 INFO v2.run - invalidos motivo='produto indisponivel' qtd=2
+2026-03-01 13:28:11,627 INFO v2.run - invalidos motivo='texto de indisponibilidade detectado: sem estoque' qtd=1
+2026-03-01 13:33:28,298 INFO v2.run - WHATSAPP_PROVIDER=cloud
+2026-03-01 13:33:28,298 INFO v2.run - WhatsApp provider ativo no V2: cloud
+2026-03-01 13:33:28,301 INFO v2.run - inicio ciclo=1 total_produtos=2
+2026-03-01 13:33:29,496 INFO v2.run - validacao marketplace=mercadolivre status=INVALID motivo=texto de indisponibilidade detectado: sem estoque promo_status=SKIP drop_pct=None url=https://www.mercadolivre.com.br/monitor-gamer-lg-ultragear-24-24gs60f-b-ips-full-hd-180hz-1ms-gtg-nvidia-g-sync-amd-freesync-hdr10-srgb-99-hdmi-displayport/p/MLB38947984
+2026-03-01 13:33:30,083 INFO v2.run - validacao marketplace=mercadolivre status=INVALID motivo=texto de indisponibilidade detectado: sem estoque promo_status=SKIP drop_pct=None url=https://www.mercadolivre.com.br/xiaomi-redmi-note-15-global-256gb-8gb4-ram-108mpx-677-nfc-azul/p/MLB64991446
+2026-03-01 13:33:30,083 INFO v2.run - fim ciclo=1 processados=2 validos=0 invalidos=2
+2026-03-01 13:33:30,083 INFO v2.run - price_checks gravados: 2
+2026-03-01 13:33:30,083 INFO v2.run - resumo ciclo=1 total_checks=2 suspect=0 promo_disparadas=0 tempo_total=1.78s
+2026-03-01 13:33:30,083 INFO v2.run - invalidos motivo='texto de indisponibilidade detectado: sem estoque' qtd=2

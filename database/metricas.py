@@ -16,9 +16,7 @@ def registrar_promocao(produto, preco_anterior, conn=None):
     categoria = produto.get("categoria")
     preco_atual = produto.get("preco")
 
-    # -----------------------------
-    # Cálculo seguro de desconto
-    # -----------------------------
+   
     if not preco_anterior or preco_anterior == 0:
         desconto = 0
     else:
